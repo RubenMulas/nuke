@@ -1,6 +1,24 @@
 import nuke
 import KnobScripter
 import os
+import platform
+
+
+# Define where .nuke directory is on each OS's network.
+Win_Dir = 'C:\Users\Ben\.nuke'
+Mac_Dir = '/Users/Ben/.nuke'
+Linux_Dir = '/home/benm/.nuke'
+# Set global directory
+if platform.system() == "Windows":
+dir = Win_Dir
+elif platform.system() == "Darwin":
+dir = Mac_Dir
+elif platform.system() == "Linux":
+dir = Linux_Dir
+else:
+dir = None
+
+
 
 
 
