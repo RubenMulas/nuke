@@ -1,11 +1,20 @@
+#---------------------------------------
+# menu.py
+# Version: 1.0.1
+# Last updated: 14/08/2024
+# Ruben Mulas
+#---------------------------------------
+
+
 import nuke
-import KnobScripter
 import os
 import platform
+import nukescripts
+import KnobScripter
 
 
 # Define where .nuke directory is on each OS's network.
-Win_Dir = 'C:/Users/Ruben\.nuke'
+Win_Dir = 'C:/Users/Ruben/.nuke'
 Mac_Dir = '/Users/Ruben/.nuke'
 Linux_Dir = '/home/Ruben/.nuke'
 
@@ -23,31 +32,48 @@ else:
 
 
 
-# DEFINICIONES -----------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
+# DEFINITIONS ----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 
 def closeAllProperties():
 	for nodes in nuke.allNodes():
 		nodes.hideControlPanel()
 
-#SETTINGS ------------------------------------------------------------------------
-	
-nuke.menu('Nuke').addCommand('Ruben/Settings/Close all properties panels', lambda: closeAllProperties(), 'alt+x')
-#nuke.menu('Nuke').addCommand("Ruben/Settings/Search Tracker", lambda: searchTracker.searchTracker(), 'alt+t')
-#nuke.menu('Nuke').addCommand('Ruben/Settings/backdrop', lambda: GrayAutoBackdrop.GrayAutoBackdrop(), 'alt+b')
-#nuke.menu('Nuke').addCommand('Ruben/Settings/Scale tree', lambda: W_scaleTree.scaleTreeFloatingPanel()', 'alt+shift+s`)
+
+#-----------------------------------------------------------------------------------------
+# SETTINGS -------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
+
+menuSettings = nuke.menu('Nuke').addMenu('Utilities')
+
+menuSettings.addCommand('Close all properties panels', lambda: closeAllProperties(), 'alt+x')
+menuSettings.addCommand('Autocrop', 'nukescripts.autocrop()')
 
 
+#-----------------------------------------------------------------------------------------
+# CUSTOM NODES ---------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
+
+menuNodes = nuke.menu('Nodes')
+
+menuNodes.addCommand('Color/GradeAlpha', "nuke.createNode('Grade', 'white_clamp 1 channels alpha')", 'alt+g', icon="Grade.png", shortcutContext = 2)
+menuNodes.addCommand('Color/Math/Multiply', "nuke.createNode('Multiply', '')", 'ctrl+m', icon="ColorMult.png", shortcutContext = 2)
+menuNodes.addCommand('Merge/Merges/Merge_Mask', "nuke.createNode('Merge2', 'operation mask')", 'alt+m', icon="MergeOut.png", shortcutContext = 2)
+menuNodes.addCommand('Merge/KeyMix', "nuke.createNode('Keymix', '')", 'ctrl+alt+x', icon="Keymix.png", shortcutContext = 2)
+menuNodes.addCommand('Channel/ChannelMerge', "nuke.createNode('ChannelMerge', '')", 'alt+c', icon="ChannelMerge.png", shortcutContext = 2)
+menuNodes.addCommand('Channel/Shuffle_White', lambda: nuke.createNode('Shuffle2', 'mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"'), 'ctrl+alt+s', icon="Shuffle.png", shortcutContext = 2)
+menuNodes.addCommand('Transform/Tracker', "nuke.createNode('Tracker4', '')", 'ctrl+t', icon="Tracker.png", shortcutContext = 2)
+menuNodes.addCommand('Time/FrameHold', "nuke.createNode('FrameHold', '')", 'ctrl+f', icon="FrameHold.png", shortcutContext = 2)
+
+
+myNodesMenu = nuke.menu('Nodes').addMenu('rm nodes', icon=dir+"/icons/rm_icon.png")
+
+myNodesMenu.addCommand("Additive/additivePlus", "nuke.nodePaste(\"" + os.path.join(dir + "/Tools/rm_additivePlus.nk") + "\")", shortcutContext = 2) 
+
+#-----------------------------------------------------------------------------------------
 # KNOB DEFAULT ---------------------------------------------------------------------------
-	
-nuke.menu('Nuke').addCommand('Ruben/Nodes/GradeAlpha', lambda : nuke.createNode('Grade', 'white_clamp 1 channels alpha'), 'alt+g', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/Merge_Mask', lambda : nuke.createNode('Merge2', 'operation mask'), 'alt+m', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/Shuffle_White', lambda : nuke.createNode('Shuffle2', 'mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"'), 'ctrl+alt+s', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/Tracker', lambda : nuke.createNode('Tracker4', ''), 'ctrl+t', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/ChannelMerge', lambda : nuke.createNode('ChannelMerge', ''), 'alt+c', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/KeyMix', lambda : nuke.createNode('Keymix', ''), 'ctrl+alt+x', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/Multiply', lambda : nuke.createNode('Multiply', ''), 'ctrl+m', shortcutContext = 2)
-nuke.menu('Nuke').addCommand('Ruben/Nodes/FrameHold', lambda : nuke.createNode('FrameHold', ''), 'ctrl+f', shortcutContext = 2)
-
+#-----------------------------------------------------------------------------------------
 
 
 #nuke.knobDefault('Copy.bbox', '2')
